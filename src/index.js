@@ -1,8 +1,12 @@
 define(function() {
 
     return {
-        collections: require('./collections'),
-        functions: require('./functions')
-    }
+        collection: require('./collection'),
+        function: require('./function'),
+        promise: require('./promise'),
+        ui: require('./ui')
+    };
+
+    //TODO: add debounce method
 
 });
