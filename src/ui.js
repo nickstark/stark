@@ -8,4 +8,9 @@ define(function() {
         triggerLayout: require('./ui/triggerLayout')
     };
 
+    //TODO: add delegate event method
+    //TODO: matches method
+    //TODO: alias for queryselectorall -> array
+    //TODO: add keyCodes?
+
 });
