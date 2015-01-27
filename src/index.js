@@ -8,10 +8,11 @@ define(function() {
         ui: require('./ui')
     };
 
-    //TODO: add debounce method
-
-    //TODO: add aria category (hide, show, etc.)
     //TODO: add object/class category (bindAll, inherit, extends, etc.)
     //TODO: add pubsub
+
+    //TODO: generated documentation
+    //TODO: grunt umd build process
+    //TODO: .jshint file
 
 });
