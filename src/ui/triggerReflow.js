@@ -1,10 +1,8 @@
 define(function() {
 
-    var triggerLayout = function(root) {
+    return function(root) {
         root = root || document.body;
         root.offsetWidth;
     };
-
-    return triggerLayout;
 
 });

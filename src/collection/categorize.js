@@ -1,5 +1,6 @@
 define(function() {
-    var categorize = function(prop, dataArr) {
+
+    return function(prop, dataArr) {
         var lookup = {};
 
         dataArr.forEach(function(item) {
@@ -12,5 +13,4 @@ define(function() {
         return lookup;
     };
 
-    return categorize;
 });

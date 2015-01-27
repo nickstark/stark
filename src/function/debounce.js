@@ -3,7 +3,7 @@ define(function() {
     // be triggered. The function will be called after it stops being called for
     // N milliseconds. If `immediate` is passed, trigger the function on the
     // leading edge, instead of the trailing.
-    var debounce = function(func, wait, immediate) {
+    return function(func, wait, immediate) {
         var timeout;
 
         return function() {
@@ -25,5 +25,4 @@ define(function() {
 
     };
 
-    return debounce;
 });

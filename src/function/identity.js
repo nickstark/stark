@@ -1,7 +1,7 @@
 define(function() {
-    var identity = function(arg) {
+
+    return function(arg) {
         return arg;
     };
 
-    return identity;
 });
