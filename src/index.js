@@ -13,6 +13,7 @@ define(function() {
     //TODO: add object/class category (bindAll, inherit, extends, etc.)
 
     //TODO: generated documentation
+    //TODO: UMD support
 
     //TODO: add more complex breakpoint service
     // Fires events on change

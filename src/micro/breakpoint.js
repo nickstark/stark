@@ -1,5 +1,7 @@
 define(function() {
 
+    // Browser Support: IE9+ (Dependancy on getComputedStyle)
+
     var debounce = require('../function/debounce');
 
     var DEFAULTS = {
@@ -75,7 +77,6 @@ define(function() {
 
     //TODO: document script
     //TODO: test
-    //TODO: define browser support
 
     return BreakpointListener;
 });

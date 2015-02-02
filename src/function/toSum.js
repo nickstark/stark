@@ -1,8 +1,8 @@
 define(function() {
 
-    return function(prop) {
+    return function() {
         return function(total, input) {
-            return total + (prop ? input[prop] : input);
+            return total + input;
         };
     };
 

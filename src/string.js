@@ -5,9 +5,9 @@ define(function() {
     */
 
     return {
-        toCamelCase: require('./string/toCamelCase')
+        toCamelCase: require('./string/toCamelCase'),
+        capitalize: require('./string/capitalize'),
+        capitalizeAll: require('./string/capitalizeAll')
     };
-
-    //TODO: add capitalize function
 
 });
