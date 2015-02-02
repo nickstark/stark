@@ -16,6 +16,6 @@ define(function() {
         // useful for finding an item by id or other unique property
         // var selectedUser = findByProperty('id', users, selectedId);
         findByProperty: require('./collection/findByProperty')
-    }
+    };
 
 });

@@ -27,6 +27,10 @@ define(function() {
         // var fields = farms.reduce(toSum('fields', 0));
         toSum: require('./function/toSum'),
 
+        // useful for filtering out duplicates
+        // var activeUsers = loginIds.filter(toUnique());
+        toUnique: require('./function/toUnique'),
+
         // return first argument, useful for filtering out falsy values
         identity: require('./function/identity'),
 

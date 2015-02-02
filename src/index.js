@@ -5,14 +5,20 @@ define(function() {
         function: require('./function'),
         promise: require('./promise'),
         string: require('./string'),
-        ui: require('./ui')
+        ui: require('./ui'),
+        PubSub: require('./micro/pubsub.js'),
+        breakpoint: require('./micro/breakpoint')
     };
 
     //TODO: add object/class category (bindAll, inherit, extends, etc.)
-    //TODO: add pubsub
 
     //TODO: generated documentation
-    //TODO: grunt umd build process
-    //TODO: .jshint file
+
+    //TODO: add more complex breakpoint service
+    // Fires events on change
+    // Getter
+    // >, <, >=, <= operations
+    // Multiple additions
+    // returns object with set of matches
 
 });
