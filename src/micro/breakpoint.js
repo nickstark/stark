@@ -9,14 +9,14 @@ define(function() {
         element: document.body
     };
 
-    var BreakpointListener = function(options) {
+    var BreakpointService = function(options) {
         this._options = options || {};
 
         this.bindHandlers()
             .init();
     };
 
-    BreakpointListener.prototype.init = function() {
+    BreakpointService.prototype.init = function() {
         this.element = this._options.element || DEFAULTS.element;
         this.styleDeclaration = window.getComputedStyle(this.element);
         this.subscribers = [];
@@ -27,7 +27,7 @@ define(function() {
         return this;
     };
 
-    BreakpointListener.prototype.bindHandlers = function() {
+    BreakpointService.prototype.bindHandlers = function() {
         var boundResize = this._onResize.bind(this);
         var eventDelay = typeof this._options.eventDelay === 'number' ?
             this._options.eventDelay :
@@ -36,7 +36,7 @@ define(function() {
         return this;
     };
 
-    BreakpointListener.prototype._onResize = function(event) {
+    BreakpointService.prototype._onResize = function(event) {
         var cssBreakpoint = this.styleDeclaration.getPropertyValue('content');
         var oldBreakpoint;
         if (cssBreakpoint === this.currentBreakpoint) {
@@ -51,22 +51,22 @@ define(function() {
         });
     };
 
-    BreakpointListener.prototype.getBreakpoint = function() {
+    BreakpointService.prototype.getBreakpoint = function() {
         return this.currentBreakpoint;
     };
 
-    BreakpointListener.prototype.subscribe = function(callback) {
+    BreakpointService.prototype.subscribe = function(callback) {
         this.subscribers.push(callback);
     };
 
-    BreakpointListener.prototype.unsubscribe = function(callback) {
+    BreakpointService.prototype.unsubscribe = function(callback) {
         var subscriberIdx = this.subscribers.indexOf(callback);
         if (subscriberIdx > -1) {
             this.subscribers.splice(subscriberIdx, 1);
         }
     };
 
-    BreakpointListener.prototype.destroy = function() {
+    BreakpointService.prototype.destroy = function() {
         // remove event listeners
         this.element.removeEventListener('resize', this.handleResize);
 
@@ -78,5 +78,5 @@ define(function() {
     //TODO: document script
     //TODO: test
 
-    return BreakpointListener;
+    return BreakpointService;
 });

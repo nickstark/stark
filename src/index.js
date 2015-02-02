@@ -3,14 +3,15 @@ define(function() {
     return {
         collection: require('./collection'),
         function: require('./function'),
+        object: require('./object'),
         promise: require('./promise'),
         string: require('./string'),
         ui: require('./ui'),
-        PubSub: require('./micro/pubsub.js'),
-        breakpoint: require('./micro/breakpoint')
-    };
 
-    //TODO: add object/class category (bindAll, inherit, extends, etc.)
+
+        PubSub: require('./micro/pubsub.js'),
+        Breakpoint: require('./micro/breakpoint')
+    };
 
     //TODO: generated documentation
     //TODO: UMD support
