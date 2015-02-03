@@ -9,9 +9,11 @@ define(function(require) {
         debounce: require('./function/debounce'),
 
         // return first argument, useful for filtering out falsy values
+        // identity(myObject) === myObject
         identity: require('./function/identity'),
 
-        // do nothing
+        // do nothing, useful for function placeholders or functional programming
+        // (callback || noop)(callbackArgs);
         noop: require('./function/noop'),
 
         // useful for passing into mapping functions
@@ -34,7 +36,7 @@ define(function(require) {
         toSum: require('./function/toSum'),
 
         // useful for filtering out duplicates
-        // var activeUsers = loginIds.filter(toUnique());
+        // var activeUsers = recentLoginIds.filter(toUnique());
         toUnique: require('./function/toUnique')
     };
 
