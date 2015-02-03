@@ -10,7 +10,8 @@ define(function(require) {
 
 
         PubSub: require('./micro/pubsub.js'),
-        Breakpoint: require('./micro/breakpoint')
+        Breakpoint: require('./micro/breakpoint'),
+        StateManager: require('./micro/statemanager')
     };
 
     //TODO: generated documentation
