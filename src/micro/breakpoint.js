@@ -3,6 +3,7 @@ define(function(require) {
     // Browser Support: IE9+ (Dependancy on getComputedStyle)
 
     var debounce = require('../function/debounce');
+    var extend = require('../object/extend')
 
     var DEFAULTS = {
         eventDelay: 200,
@@ -10,14 +11,14 @@ define(function(require) {
     };
 
     var BreakpointService = function(options) {
-        this._options = options || {};
+        this._options = extend({}, DEFAULTS, options);
 
         this.bindHandlers()
             .init();
     };
 
     BreakpointService.prototype.init = function() {
-        this.element = this._options.element || DEFAULTS.element;
+        this.element = this._options.element;
         this.styleDeclaration = window.getComputedStyle(this.element);
         this.subscribers = [];
 
@@ -29,9 +30,7 @@ define(function(require) {
 
     BreakpointService.prototype.bindHandlers = function() {
         var boundResize = this._onResize.bind(this);
-        var eventDelay = typeof this._options.eventDelay === 'number' ?
-            this._options.eventDelay :
-            DEFAULTS.eventDelay;
+        var eventDelay = this._options.eventDelay;
         this.handleResize = debounce(boundResize, eventDelay);
         return this;
     };
