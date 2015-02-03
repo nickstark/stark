@@ -6,9 +6,14 @@ define(function(require) {
 
     return {
         // calls offsetWidth to trigger reflow
+        // fade-in example:
+        //   element.style.display = 'block';
+        //   triggerReflow();
+        //   element.classList.add('element_isVisible');
         triggerReflow: require('./ui/triggerReflow'),
 
         // fallback for vendor prefixed or non-existant Element.prototype.matches
+        // var isElementActive = matches(element, '.clasName_isActive');
         matches: require('./ui/matches')
     };
 

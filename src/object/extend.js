@@ -1,4 +1,4 @@
-defined(function(require) {
+define(function(require) {
     // Shallow extend for now
     return function(dest) {
         var argLen = arguments.length;
@@ -7,7 +7,7 @@ defined(function(require) {
         var keysLen;
         var i = 1;
         var j;
-        
+
         for (; i < argLen; i += 1) {
             curSrc = arguments[i];
             keys = Object.keys(curSrc);
@@ -15,5 +15,7 @@ defined(function(require) {
                 dest[keys[j]] = curSrc[keys[j]];
             }
         }
+
+        return dest;
     };
 });
