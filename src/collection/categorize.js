@@ -1,4 +1,4 @@
-define(function() {
+define(function(require) {
 
     return function(prop, dataArr) {
         var lookup = {};

@@ -1,4 +1,4 @@
-define(function() {
+define(function(require) {
 
     // Browser Support: IE9+ (Dependancy on getComputedStyle)
 

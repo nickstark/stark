@@ -1,4 +1,4 @@
-define(function() {
+define(function(require) {
 
     /*
     * Utility functions for generating helper functions

@@ -1,4 +1,4 @@
-define(function() {
+define(function(require) {
 
     return {
         collection: require('./collection'),

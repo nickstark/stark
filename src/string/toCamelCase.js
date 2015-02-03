@@ -1,4 +1,4 @@
-define(function() {
+define(function(require) {
     return function(str) {
         return str
             // uppercase all words

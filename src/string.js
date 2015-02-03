@@ -1,4 +1,4 @@
-define(function() {
+define(function(require) {
 
     /*
     * Utility functions for working with strings
@@ -6,8 +6,7 @@ define(function() {
 
     return {
         toCamelCase: require('./string/toCamelCase'),
-        capitalize: require('./string/capitalize'),
-        capitalizeAll: require('./string/capitalizeAll')
+        capitalize: require('./string/capitalize')
     };
 
 });

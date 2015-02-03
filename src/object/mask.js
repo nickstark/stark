@@ -1,4 +1,4 @@
-define(function() {
+define(function(require) {
 
     return function(obj, props) {
         var newObj = {};

@@ -1,5 +1,5 @@
 /*jshint expr:true */
-define(function() {
+define(function(require) {
 
     return function(root) {
         root = root || document.body;

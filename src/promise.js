@@ -1,4 +1,4 @@
-define(function() {
+define(function(require) {
 
     /*
     * Utility functions for working with promises

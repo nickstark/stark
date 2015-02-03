@@ -1,4 +1,4 @@
-define(function() {
+define(function(require) {
 
     return function(prop, dataArr, val) {
         for (var i = 0; i < dataArr.length; i++) {

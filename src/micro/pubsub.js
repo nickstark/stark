@@ -1,4 +1,4 @@
-define(function() {
+define(function(require) {
 
     //TODO: test this
     //TODO: comment this
