@@ -12,6 +12,12 @@ define(function(require) {
         // identity(myObject) === myObject
         identity: require('./function/identity'),
 
+        // converts a functions to one that returns its opposite
+        // isAuthenticated(userId); // false
+        // var isUnauthenticated = negate(isAuthenticated);
+        // isUnauthenticated(userId); // true
+        noop: require('./function/noop'),
+
         // do nothing, useful for function placeholders or functional programming
         // (callback || noop)(callbackArgs);
         noop: require('./function/noop'),
