@@ -1,4 +1,6 @@
 define(function(require) {
+    'use strict';
+
     var defaultComparator = require('./alphabetical');
     return function(property, comparator) {
         comparator = comparator || defaultComparator;
@@ -6,4 +8,5 @@ define(function(require) {
             return comparator(a[property], b[property]);
         };
     };
+
 });

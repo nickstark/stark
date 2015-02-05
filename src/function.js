@@ -16,7 +16,7 @@ define(function(require) {
         // isAuthenticated(userId); // false
         // var isUnauthenticated = negate(isAuthenticated);
         // isUnauthenticated(userId); // true
-        noop: require('./function/noop'),
+        negate: require('./function/negate'),
 
         // do nothing, useful for function placeholders or functional programming
         // (callback || noop)(callbackArgs);

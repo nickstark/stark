@@ -1,4 +1,6 @@
 define(function(require) {
+    'use strict';
+
     // Shallow extend for now
     return function(dest) {
         var argLen = arguments.length;
@@ -18,4 +20,5 @@ define(function(require) {
 
         return dest;
     };
+
 });

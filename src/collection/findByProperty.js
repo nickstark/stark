@@ -1,4 +1,5 @@
 define(function(require) {
+    'use strict';
 
     return function(prop, dataArr, val) {
         for (var i = 0; i < dataArr.length; i++) {

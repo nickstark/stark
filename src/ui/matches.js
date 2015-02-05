@@ -37,4 +37,5 @@ define(function () {
     }
 
     throw new Error('matches() Unsupported: unable to match selectors.');
+
 });

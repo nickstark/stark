@@ -1,4 +1,6 @@
 define(function(require) {
+    'use strict';
+
     return function(source, props, target) {
         // default to binding to same object
         if (typeof target === 'undefined') {
@@ -16,4 +18,5 @@ define(function(require) {
             target[prop] = source[prop].bind(source);
         });
     };
+    
 });

@@ -1,9 +1,10 @@
 define(function(require) {
+    'use strict';
 
     // Browser Support: IE9+ (Dependancy on getComputedStyle)
 
     var debounce = require('../function/debounce');
-    var extend = require('../object/extend')
+    var extend = require('../object/extend');
 
     var DEFAULTS = {
         eventDelay: 200,
@@ -70,6 +71,7 @@ define(function(require) {
         this.element.removeEventListener('resize', this.handleResize);
 
         // get rid of any reference to DOM
+        this.subscribers = null;
         this.element = null;
         this._options = null;
     };

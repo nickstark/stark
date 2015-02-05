@@ -1,4 +1,5 @@
 define(function(require) {
+    'use strict';
 
     //TODO: test this
     //TODO: comment this

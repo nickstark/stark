@@ -1,4 +1,5 @@
 define(function(require) {
+    'use strict';
 
     return function(fn) {
         return function(result) {

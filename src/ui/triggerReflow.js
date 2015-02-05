@@ -1,5 +1,6 @@
 /*jshint expr:true */
 define(function(require) {
+    'use strict';
 
     return function(root) {
         root = root || document.body;

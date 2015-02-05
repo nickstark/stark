@@ -1,4 +1,6 @@
 define(function(require) {
+    'use strict';
+
     return function(str) {
         return str
             // uppercase all words
@@ -8,4 +10,5 @@ define(function(require) {
             // lowercase first letter
             .replace(/^(.)/, function($1) { return $1.toLowerCase(); });
     };
+
 });
