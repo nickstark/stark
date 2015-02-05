@@ -6,7 +6,7 @@ define(function(require) {
 
     return {
         // camelCase('To Camel Case') === 'toCamelCase'
-        camelCase: require('./string/toCamelCase'),
+        camelCase: require('./string/camelCase'),
 
         // capitalize('word') === 'Word'
         capitalize: require('./string/capitalize')

@@ -5,6 +5,7 @@ define(function(require) {
         function: require('./function'),
         object: require('./object'),
         promise: require('./promise'),
+        sort: require('./sort'),
         string: require('./string'),
         ui: require('./ui'),
 
