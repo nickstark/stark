@@ -14,7 +14,11 @@ define(function(require) {
 
         // fallback for vendor prefixed or non-existant Element.prototype.matches
         // var isElementActive = matches(element, '.clasName_isActive');
-        matches: require('./ui/matches')
+        matches: require('./ui/matches'),
+
+        // returns a unique id with optional prefix (always a string)
+        // newInput.id = uniqueId('input'); // 'input7'
+        uniqueId: require('./ui/uniqueId')
     };
 
     //TODO: add delegate event method https://github.com/remy/min.js/blob/master/src/delegate.js
