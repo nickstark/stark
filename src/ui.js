@@ -6,10 +6,12 @@ define(function(require) {
 
     return {
         // delegate event to common root. NOTE: blur/focus and other events may not bubble
+        //   var delegate = delegateEvent(document.body, 'click', 'a.print', printPage);
+        //   delegate.remove(); // deregister function is returned by method
         delegateEvent: require('./ui/delegateEvent'),
 
         // fallback for vendor prefixed or non-existant Element.prototype.matches
-        // var isElementActive = matches(element, '.clasName_isActive');
+        //   var isElementActive = matches(element, '.clasName_isActive');
         matches: require('./ui/matches'),
 
         // calls offsetWidth to trigger reflow
@@ -20,7 +22,7 @@ define(function(require) {
         triggerReflow: require('./ui/triggerReflow'),
 
         // returns a unique id with optional prefix (always a string)
-        // newInput.id = uniqueId('input'); // 'input7'
+        //   newInput.id = uniqueId('input'); // 'input7'
         uniqueId: require('./ui/uniqueId')
     };
 
