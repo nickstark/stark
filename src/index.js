@@ -10,13 +10,14 @@ define(function(require) {
         ui: require('./ui'),
 
 
-        PubSub: require('./micro/pubsub.js'),
+        PubSub: require('./micro/pubsub'),
         Breakpoint: require('./micro/breakpoint'),
         StateManager: require('./micro/statemanager')
     };
 
     //TODO: generated documentation
     //TODO: UMD support
+    //TODO: micro lib: focus trapper
 
     //TODO: add more complex breakpoint service
     // Fires events on change

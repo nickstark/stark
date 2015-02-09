@@ -1,24 +1,33 @@
 define(function(require) {
     'use strict';
 
-    //TODO: test this
-    //TODO: comment this
-
+    // basic constructor, initializes topics repository
     var PubSub = function() {
         this._topics = {};
     };
 
-    PubSub.prototype.subscribe = function(topic, callback) {
+    var proto = PubSub.prototype;
+
+    // associate a callback with an event topic
+    proto.subscribe = function(topic, callback) {
         // add array of topic subscribers if new topic
         if (!this._topics.hasOwnProperty(topic)) {
             this._topics[topic] = [];
         }
 
         // push callback into topics array
-        this._topics.push(callback);
+        this._topics[topic].push(callback);
+
+        return {
+            topic: topic,
+            remove: this.unsubscribe.bind(this, topic, callback)
+        };
     };
 
-    PubSub.prototype.unsubscribe = function(topic, callback) {
+    // disassociate a callback from a topic
+    // returns boolean indicating success
+    proto.unsubscribe = function(topic, callback) {
+        // check topic exists
         if (!this._topics.hasOwnProperty(topic)) {
             return false;
         }
@@ -32,7 +41,9 @@ define(function(require) {
         return false;
     };
 
-    PubSub.prototype.publish = function(topic) {
+    // publish an event to a topic
+    // takes any number of arguments
+    proto.publish = function(topic) {
         if (typeof topic === 'undefined') {
             throw new Error('PubSub: trying to publish with undefined topic');
         }
@@ -44,6 +55,13 @@ define(function(require) {
             });
         }
     };
+
+    // Strategies
+    //   1) As a constructor, an instance of PubSub can be creative to provide
+    //      clarity and avoid namespacing issues.
+    //   2) Function.prototype.bind can be used to create a publishing function
+    //      independent of the topic.
+    //      E.g. triggerProgress = PubSub.prototype.publish.bind(myPubSub, 'progress');
 
     return PubSub;
 });
