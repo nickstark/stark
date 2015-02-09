@@ -4,6 +4,16 @@ define(function(require) {
     var matches = require('./matches');
     var removeListener = Element.prototype.removeEventListener;
 
+    var DelegatedEvent = function(originalEvent, delegateRoot, delegateTarget) {
+        this.original = originalEvent;
+        this.delegateRoot = delegateRoot;
+        this.delegateTarget = delegateTarget;
+    };
+
+    DelegatedEvent.prototype.preventDefault = function() {
+        return this.original.preventDefault();
+    };
+
     return function(root, eventName, childSelector, handler, capturePhase) {
         capturePhase = capturePhase || false; // default to bubbling phase
 
@@ -13,7 +23,7 @@ define(function(require) {
             // check if any element up the chain matches selector
             while (target !== root) {
                 if (target && matches(target, childSelector)) {
-                    handler.call(this, event); // call handler with original event
+                    handler.call(this, new DelegatedEvent(event, root, target)); // call handler with original event
                     break;
                 }
                 target = target.parentNode;
