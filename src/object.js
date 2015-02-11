@@ -20,7 +20,4 @@ define(function(require) {
         extend: require('./object/extend')
     };
 
-    //TODO: bindAll
-    //TODO: extends
-
 });

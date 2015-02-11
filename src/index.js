@@ -18,8 +18,9 @@ define(function(require) {
     //TODO: generated documentation
     //TODO: UMD support
     //TODO: micro lib: focus trapper
+    //TODO: micro lib: asset loader/manager
 
-    //TODO: add more complex breakpoint service
+    //TODO: add more complex breakpoint service?
     // Fires events on change
     // Getter
     // >, <, >=, <= operations

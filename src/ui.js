@@ -26,7 +26,6 @@ define(function(require) {
         uniqueId: require('./ui/uniqueId')
     };
 
-    //TODO: add delegate event method https://github.com/remy/min.js/blob/master/src/delegate.js
     //TODO: alias for queryselectorall -> array
 
 });
