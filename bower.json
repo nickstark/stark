@@ -1,0 +1,19 @@
+{
+  "name": "stark",
+  "version": "0.0.1",
+  "homepage": "https://github.com/nickstark/stark",
+  "authors": [
+    "Nick Stark <dev.nickstark@gmail.com>"
+  ],
+  "description": "Modular, reusable utilities",
+  "main": "src/index.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
