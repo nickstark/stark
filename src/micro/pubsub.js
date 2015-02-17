@@ -1,6 +1,8 @@
 define(function(require) {
     'use strict';
 
+    var extend = require('../object/extend');
+
     // basic constructor, initializes topics repository
     var PubSub = function() {
         this._topics = {};
@@ -24,6 +26,9 @@ define(function(require) {
         };
     };
 
+    // alias 'on'
+    proto.on = proto.subscribe;
+
     // disassociate a callback from a topic
     // returns boolean indicating success
     proto.unsubscribe = function(topic, callback) {
@@ -32,6 +37,7 @@ define(function(require) {
             return false;
         }
 
+        // find callback and remove from array
         var callbackIdx = this._topics[topic].indexOf(callback);
         if (callbackIdx > -1) {
             this._topics[topic].splice(callbackIdx, 1);
@@ -40,6 +46,9 @@ define(function(require) {
 
         return false;
     };
+
+    // alias 'off'
+    proto.off = proto.unsubscribe;
 
     // publish an event to a topic
     // takes any number of arguments
@@ -56,12 +65,34 @@ define(function(require) {
         }
     };
 
+    // alias 'trigger'
+    proto.trigger = proto.publish;
+
+    // extend pubsub functionality onto external object
+    // optionally, pass in an existing pubsub instance to bind to
+    PubSub.extendObject = function(destObj, inst) {
+        if ( !(inst instanceof PubSub) ) {
+            inst = new PubSub();
+        }
+
+        destObj._pubsub = inst;
+        destObj.subscribe = proto.subscribe.bind(inst);
+        destObj.unsubscribe = proto.unsubscribe.bind(inst);
+        destObj.publish = proto.publish.bind(inst);
+    };
+
     // Strategies
     //   1) As a constructor, an instance of PubSub can be creative to provide
     //      clarity and avoid namespacing issues.
     //   2) Function.prototype.bind can be used to create a publishing function
     //      independent of the topic.
-    //      E.g. triggerProgress = PubSub.prototype.publish.bind(myPubSub, 'progress');
+    //        E.g. triggerProgress = PubSub.prototype.publish.bind(myPubSub, 'progress');
+    //   3) Share events between all instances of a class with a shared instance.
+    //        E.g.
+    //          var events = new PubSub();
+    //          var MyClass = function() { PubSub.extendObject(this, events); };
+    //          var instance = new MyClass();
+    //          instance.publish('my_event');
 
     return PubSub;
 });
