@@ -1,6 +1,19 @@
 define(function(require) {
     'use strict';
 
+    // Strategies
+    //   1) As a constructor, an instance of PubSub can be created to provide
+    //      clarity and avoid namespacing issues.
+    //   2) Function.prototype.bind can be used to create a publishing function
+    //      independent of the topic.
+    //        E.g. triggerProgress = PubSub.prototype.publish.bind(myPubSub, 'progress');
+    //   3) Share events between all instances of a class with a shared instance.
+    //        E.g.
+    //          var events = new PubSub();
+    //          var MyClass = function() { PubSub.extendObject(this, events); };
+    //          var instance = new MyClass();
+    //          instance.publish('my_event');
+
     var extend = require('../object/extend');
 
     // basic constructor, initializes topics repository
@@ -26,9 +39,6 @@ define(function(require) {
         };
     };
 
-    // alias 'on'
-    proto.on = proto.subscribe;
-
     // disassociate a callback from a topic
     // returns boolean indicating success
     proto.unsubscribe = function(topic, callback) {
@@ -47,9 +57,6 @@ define(function(require) {
         return false;
     };
 
-    // alias 'off'
-    proto.off = proto.unsubscribe;
-
     // publish an event to a topic
     // takes any number of arguments
     proto.publish = function(topic) {
@@ -65,7 +72,9 @@ define(function(require) {
         }
     };
 
-    // alias 'trigger'
+    // alias jquery nomenclature
+    proto.on = proto.subscribe;
+    proto.off = proto.unsubscribe;
     proto.trigger = proto.publish;
 
     // extend pubsub functionality onto external object
@@ -76,23 +85,10 @@ define(function(require) {
         }
 
         destObj._pubsub = inst;
-        destObj.subscribe = proto.subscribe.bind(inst);
-        destObj.unsubscribe = proto.unsubscribe.bind(inst);
-        destObj.publish = proto.publish.bind(inst);
+        destObj.on = destObj.subscribe = proto.subscribe.bind(inst);
+        destObj.off = destObj.unsubscribe = proto.unsubscribe.bind(inst);
+        destObj.trigger = destObj.publish = proto.publish.bind(inst);
     };
-
-    // Strategies
-    //   1) As a constructor, an instance of PubSub can be creative to provide
-    //      clarity and avoid namespacing issues.
-    //   2) Function.prototype.bind can be used to create a publishing function
-    //      independent of the topic.
-    //        E.g. triggerProgress = PubSub.prototype.publish.bind(myPubSub, 'progress');
-    //   3) Share events between all instances of a class with a shared instance.
-    //        E.g.
-    //          var events = new PubSub();
-    //          var MyClass = function() { PubSub.extendObject(this, events); };
-    //          var instance = new MyClass();
-    //          instance.publish('my_event');
 
     return PubSub;
 });
