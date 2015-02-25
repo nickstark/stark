@@ -6,6 +6,7 @@ define(function(require) {
     var debounce = require('../function/debounce');
     var extend = require('../object/extend');
 
+    // option defaults
     var DEFAULTS = {
         eventDelay: 200,
         element: document.body

@@ -1,6 +1,7 @@
 define(function(require) {
 
     return {
+        // categories indexes
         collection: require('./collection'),
         function: require('./function'),
         object: require('./object'),
@@ -9,7 +10,7 @@ define(function(require) {
         string: require('./string'),
         ui: require('./ui'),
 
-
+        // micro library classes
         PubSub: require('./micro/pubsub'),
         Breakpoint: require('./micro/breakpoint'),
         StateManager: require('./micro/statemanager')
@@ -18,7 +19,11 @@ define(function(require) {
     //TODO: generated documentation
     //TODO: UMD support
     //TODO: micro lib: focus trapper
-    //TODO: micro lib: asset loader/manager
+    //TODO: micro lib: asset loader/manage
+
+
+    // TODO: degrees to radians
+    // TODO: radians to degrees
 
     //TODO: add more complex breakpoint service?
     // Fires events on change

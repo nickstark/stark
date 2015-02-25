@@ -10,6 +10,11 @@ define(function(require) {
         //   delegate.remove(); // deregister function is returned by method
         delegateEvent: require('./ui/delegateEvent'),
 
+        // alias for querySelectorAll, casts NodeList into Array
+        //   var links = find('a');
+        //   links.forEach(doSomething);
+        find: require('./ui/find')
+
         // fallback for vendor prefixed or non-existant Element.prototype.matches
         //   var isElementActive = matches(element, '.clasName_isActive');
         matches: require('./ui/matches'),
@@ -25,7 +30,5 @@ define(function(require) {
         //   newInput.id = uniqueId('input'); // 'input7'
         uniqueId: require('./ui/uniqueId')
     };
-
-    //TODO: alias for queryselectorall -> array
 
 });
