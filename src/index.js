@@ -16,7 +16,7 @@ define(function(require) {
         StateManager: require('./micro/statemanager')
     };
 
-    //TODO: generated documentation
+    //TODO: generated documentation DOXX
     //TODO: UMD support
     //TODO: micro lib: focus trapper
     //TODO: micro lib: asset loader/manage

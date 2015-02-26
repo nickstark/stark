@@ -3,8 +3,12 @@
   "version": "0.0.1",
   "description": "Modular, reusable utilities",
   "private": true,
+  "scripts": {
+      "docs": "rm -r docs; doxx -s src"
+  },
   "dependencies": {},
   "devDependencies": {
+    "doxx": "^1.2.5",
     "grunt": "^0.4.5",
     "grunt-contrib-jshint": "^0.11.0",
     "grunt-contrib-requirejs": "^0.4.4"

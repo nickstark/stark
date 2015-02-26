@@ -16,14 +16,23 @@ define(function(require) {
 
     var extend = require('../object/extend');
 
-    // basic constructor, initializes topics repository
+    /*
+     * basic constructor, initializes topics repository
+     *
+     * @constructor
+     */
     var PubSub = function() {
         this._topics = {};
     };
 
     var proto = PubSub.prototype;
 
-    // associate a callback with an event topic
+    /*
+     * associate a callback with an event topic
+     *
+     * @param {String} topic String key to subscribe to (E.g. Event name)
+     * @param {Function} callback Function to call when topic is published
+     */
     proto.subscribe = function(topic, callback) {
         // add array of topic subscribers if new topic
         if (!this._topics.hasOwnProperty(topic)) {
