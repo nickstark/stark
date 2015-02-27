@@ -11,6 +11,7 @@ define(function(require) {
         // mask out properties we don't need
         return mask(anchor, [
             'hash',
+            'href',
             'host',
             'hostname',
             'pathname',
