@@ -13,7 +13,7 @@ define(function(require) {
         // alias for querySelectorAll, casts NodeList into Array
         //   var links = find('a');
         //   links.forEach(doSomething);
-        find: require('./ui/find')
+        find: require('./ui/find'),
 
         // fallback for vendor prefixed or non-existant Element.prototype.matches
         //   var isElementActive = matches(element, '.clasName_isActive');
