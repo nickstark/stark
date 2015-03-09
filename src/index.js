@@ -20,7 +20,6 @@ define(function(require) {
     //TODO: UMD support
     //TODO: micro lib: focus trapper
     //TODO: micro lib: asset loader/manager
-    //TODO: remove grunt dependancy
 
 
     //TODO: degrees to radians

@@ -1,5 +1,5 @@
-define(function() {
-    window.utils = require('src/index');
+require(['src/index'], function(utils) {
+    window.utils = utils;
 
     // put all functions on window
     var addMethods = function(parent) {
