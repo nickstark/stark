@@ -1,6 +1,8 @@
 define(function(require) {
     'use strict';
 
+    //TODO: add option or separate method for deep extend
+
     // Shallow extend for now
     return function(dest) {
         var argLen = arguments.length;

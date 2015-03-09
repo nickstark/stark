@@ -19,18 +19,19 @@ define(function(require) {
     //TODO: generated documentation DOXX
     //TODO: UMD support
     //TODO: micro lib: focus trapper
-    //TODO: micro lib: asset loader/manage
+    //TODO: micro lib: asset loader/manager
     //TODO: remove grunt dependancy
 
 
-    // TODO: degrees to radians
-    // TODO: radians to degrees
+    //TODO: degrees to radians
+    //TODO: radians to degrees
+    //TODO: Vector and Point classes?
+    //TODO: BaseView with event listener registry
+    //TODO: micro templating
+    //TODO: object deep equals
+    //TODO: Container base object (common size, isEmpty, forEach, etc)
+    //TODO: Error classes (Not implemented, etc)
 
-    //TODO: add more complex breakpoint service?
-    // Fires events on change
-    // Getter
-    // >, <, >=, <= operations
-    // Multiple additions
-    // returns object with set of matches
+    //TODO: attach listener and detach when complete ("once")
 
 });

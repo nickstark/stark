@@ -15,6 +15,7 @@ define(function(require) {
     //          instance.publish('my_event');
 
     var extend = require('../object/extend');
+    var bindAll = require('../object/bindAll');
 
     /*
      * basic constructor, initializes topics repository
@@ -25,15 +26,21 @@ define(function(require) {
         this._topics = {};
     };
 
-    var proto = PubSub.prototype;
-
     /*
      * associate a callback with an event topic
      *
      * @param {String} topic String key to subscribe to (E.g. Event name)
      * @param {Function} callback Function to call when topic is published
      */
-    proto.subscribe = function(topic, callback) {
+    PubSub.prototype.subscribe = function(topic, callback) {
+        // make sure arguments are correct
+        if (typeof topic === 'undefined') {
+            throw new Error('PubSub: trying to subscribe to undefined topic');
+        }
+        if (typeof callback !== 'function') {
+            throw new Error('PubSub: subscribe callback is not a function');
+        }
+
         // add array of topic subscribers if new topic
         if (!this._topics.hasOwnProperty(topic)) {
             this._topics[topic] = [];
@@ -50,7 +57,15 @@ define(function(require) {
 
     // disassociate a callback from a topic
     // returns boolean indicating success
-    proto.unsubscribe = function(topic, callback) {
+    PubSub.prototype.unsubscribe = function(topic, callback) {
+        // make sure arguments are correct
+        if (typeof topic === 'undefined') {
+            throw new Error('PubSub: trying to unsubscribe from undefined topic');
+        }
+        if (typeof callback !== 'function') {
+            throw new Error('PubSub: unsubscribe callback is not a function');
+        }
+
         // check topic exists
         if (!this._topics.hasOwnProperty(topic)) {
             return false;
@@ -68,7 +83,7 @@ define(function(require) {
 
     // publish an event to a topic
     // takes any number of arguments
-    proto.publish = function(topic) {
+    PubSub.prototype.publish = function(topic) {
         if (typeof topic === 'undefined') {
             throw new Error('PubSub: trying to publish with undefined topic');
         }
@@ -82,21 +97,38 @@ define(function(require) {
     };
 
     // alias jquery nomenclature
-    proto.on = proto.subscribe;
-    proto.off = proto.unsubscribe;
-    proto.trigger = proto.publish;
+    PubSub.prototype.on = PubSub.prototype.subscribe;
+    PubSub.prototype.off = PubSub.prototype.unsubscribe;
+    PubSub.prototype.trigger = PubSub.prototype.publish;
 
+    // static method
+    //
     // extend pubsub functionality onto external object
     // optionally, pass in an existing pubsub instance to bind to
-    PubSub.extendObject = function(destObj, inst) {
+    //
+    // returns core pubsub instance, can be saved to pass into additional calls
+    PubSub.extendObject = function(destObj, inst, includeJqueryFns) {
+        // create new instance if pubsub isn't passed in
         if ( !(inst instanceof PubSub) ) {
             inst = new PubSub();
         }
 
-        destObj._pubsub = inst;
-        destObj.on = destObj.subscribe = proto.subscribe.bind(inst);
-        destObj.off = destObj.unsubscribe = proto.unsubscribe.bind(inst);
-        destObj.trigger = destObj.publish = proto.publish.bind(inst);
+        // define properties to bind to destObj
+        var bindableProps = [
+            'subscribe',
+            'unsubscribe',
+            'publish'
+        ];
+
+        // add jquery-esque functions if appropriate
+        if (includeJqueryFns) {
+            bindableProps.push('on', 'off', 'trigger');
+        }
+
+        // bind pubsub functions to destination object
+        bindAll(inst, bindableProps, destObj);
+
+        return inst;
     };
 
     return PubSub;
