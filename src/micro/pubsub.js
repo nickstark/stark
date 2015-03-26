@@ -131,5 +131,12 @@ define(function(require) {
         return inst;
     };
 
+    //TODO: make able to subscribe to other PubSub instances?
+    //       var globalEvents = new PubSub();
+    //       var moduleEvents = new PubSub();
+    //       moduleEvents.subscribe(globalEvents);
+    //       moduleEvents.subscribe('someglobalevent', handler);
+    //       globalEvents.publish('someglobalevent');
+
     return PubSub;
 });

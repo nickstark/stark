@@ -5,6 +5,10 @@ define(function(require) {
     */
 
     return {
+        // creates SVG element in namespace http://www.w3.org/2000/svg
+        //   var path = createSVGElement('path');
+        createSVGElement: require('./ui/createSVGElement'),
+
         // delegate event to common root. NOTE: blur/focus and other events may not bubble
         //   var delegate = delegateEvent(document.body, 'click', 'a.print', printPage);
         //   delegate.remove(); // deregister function is returned by method
@@ -14,6 +18,10 @@ define(function(require) {
         //   var links = find('a');
         //   links.forEach(doSomething);
         find: require('./ui/find'),
+
+        // add event listener that removes itself after one call
+        //   listenOnce(btnElement, 'click', firstClickHandler, false);
+        listenOnce: require('./ui/listenOnce'),
 
         // fallback for vendor prefixed or non-existant Element.prototype.matches
         //   var isElementActive = matches(element, '.clasName_isActive');

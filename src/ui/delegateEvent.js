@@ -39,4 +39,7 @@ define(function(require) {
         };
     };
 
+    //TODO: add stopPropagation
+    //TODO: pass on `return false;` ?
+
 });

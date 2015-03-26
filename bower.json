@@ -15,8 +15,6 @@
     "bower_components",
     "test",
     "tests",
-    "Gruntfile.js",
-    "demo.*",
-    ".jshintrc"
+    "demo.*"
   ]
 }
