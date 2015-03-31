@@ -3,6 +3,7 @@ define(function(require) {
     return {
         // categories indexes
         collection: require('./collection'),
+        errors: require('./errors'),
         function: require('./function'),
         object: require('./object'),
         promise: require('./promise'),
