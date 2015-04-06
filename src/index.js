@@ -12,6 +12,7 @@ define(function(require) {
         ui: require('./ui'),
 
         // micro library classes
+        DOMRegion: require('./micro/domregion'),
         PubSub: require('./micro/pubsub'),
         Breakpoint: require('./micro/breakpoint'),
         StateManager: require('./micro/statemanager')
@@ -19,19 +20,12 @@ define(function(require) {
 
     //TODO: generated documentation DOXX
     //TODO: UMD support
-    //TODO: micro lib: focus trapper
     //TODO: micro lib: asset loader/manager
     //TODO: unit testing
 
-
-    //TODO: degrees to radians
-    //TODO: radians to degrees
-    //TODO: Vector and Point classes?
     //TODO: BaseView with event listener registry
     //TODO: micro templating
     //TODO: object deep equals
-    //TODO: Container base object (common size, isEmpty, forEach, etc)
-    //TODO: DOMify method (turns string into element representation) - create tmp el and innerHTML
     //TODO: times method (run something n times) times(3, doSomething)
     //TODO: every method (throttle something to every n times) every(3, checkSomething)
     //TODO: validation handler that ties in to required, etc. Adds novalidate.
@@ -42,5 +36,22 @@ define(function(require) {
     //  EX. new StateBinder(myErrorElement, 'hidden', { default: false }).listen(socket, 'message', myServerCallback);
     //  EX. var manualState = new StateBinder(myMenu, {class:'menu_isActive'});
     //      manualState.setValidity(true);
+
+    var formValidator = new FormValidator(document.forms[0]);
+    // adds novalidate to form, on check adds aria-invalid to elements
+    // registers
+    //     - required
+    //     - maxlength
+    //     - pattern
+
+    // validation for specific field
+    formValidator.addValidation('fieldName', function(form, field) {}, ['blur', 'change']); // default to both blur and change
+
+    // validation on whole form
+    formValidator.addValidation(function(form) {}, ['submit']);
+
+    form.elements.forEach(function(element) {
+        formValidator.addValidation(element.name);
+    })
 
 });
