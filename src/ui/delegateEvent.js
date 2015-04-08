@@ -14,16 +14,26 @@ define(function(require) {
         return this.original.preventDefault();
     };
 
+    DelegatedEvent.prototype.stopPropagation = function() {
+        return this.original.stopPropagation();
+    };
+
     return function(root, eventName, childSelector, handler, capturePhase) {
         capturePhase = capturePhase || false; // default to bubbling phase
 
         var delegateHandler = function(event) {
             var target = event.target;
+            var returnVal;
 
             // check if any element up the chain matches selector
             while (target !== root) {
                 if (target && matches(target, childSelector)) {
-                    handler.call(this, new DelegatedEvent(event, root, target)); // call handler with original event
+                    returnVal = handler.call(this, new DelegatedEvent(event, root, target)); // call handler with original event
+                    if (returnVal === false) {
+                        // simulate return false;
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
                     break;
                 }
                 target = target.parentNode;
@@ -35,11 +45,9 @@ define(function(require) {
 
         // return function to remove event listener
         return {
+            delegateRoot: root,
             remove: removeListener.bind(root, eventName, delegateHandler, capturePhase)
         };
     };
-
-    //TODO: add stopPropagation
-    //TODO: pass on `return false;` ?
 
 });

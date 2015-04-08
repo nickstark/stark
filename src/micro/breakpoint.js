@@ -79,6 +79,7 @@ define(function(require) {
 
     //TODO: document script
     //TODO: test
+    //TODO: use pubsub for eventing
 
     return BreakpointService;
 });
