@@ -3,9 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+    <style>
+        body {
+            content: "default"
+        }
+
+        @media (min-width: 800px) {
+            body {
+                content: "large";
+            }
+        }
+    </style>
 </head>
 <body>
     <a href="//google.com"><span>link text</span></a>
+    <div tabindex="0">
+        <a href="//google.com"><span>link text</span></a>
+        <a href="//google.com"><span>link text</span></a>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js" data-main="demo"></script>
 </body>
 </html>

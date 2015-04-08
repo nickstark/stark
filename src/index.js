@@ -3,6 +3,7 @@ define(function(require) {
     return {
         // categories indexes
         collection: require('./collection'),
+        errors: require('./errors'),
         function: require('./function'),
         object: require('./object'),
         promise: require('./promise'),
@@ -11,6 +12,7 @@ define(function(require) {
         ui: require('./ui'),
 
         // micro library classes
+        DOMRegion: require('./micro/domregion'),
         PubSub: require('./micro/pubsub'),
         Breakpoint: require('./micro/breakpoint'),
         StateManager: require('./micro/statemanager')
@@ -28,5 +30,4 @@ define(function(require) {
     //  EX. new StateBinder(myErrorElement, 'hidden', { default: false }).listen(socket, 'message', myServerCallback);
     //  EX. var manualState = new StateBinder(myMenu, {class:'menu_isActive'});
     //      manualState.setValidity(true);
-
 });

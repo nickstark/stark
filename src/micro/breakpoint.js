@@ -5,38 +5,63 @@ define(function(require) {
 
     var debounce = require('../function/debounce');
     var extend = require('../object/extend');
+    var PubSub = require('./pubsub');
 
     // option defaults
     var DEFAULTS = {
-        eventDelay: 200,
-        element: document.body
+        eventDelay: 50, // time resize event is debounced
+        element: document.body // element to read content from
     };
 
+    /*
+     * basic constructor, initializes breakpoint listener
+     *
+     * @constructor
+     * @param {Object} options Configuration options
+     */
     var BreakpointService = function(options) {
-        this._options = extend({}, DEFAULTS, options);
+        this._options = extend({}, DEFAULTS, options || {});
 
-        this.bindHandlers()
-            .init();
+        this._bindHandlers()
+            ._init();
     };
 
-    BreakpointService.prototype.init = function() {
-        this.element = this._options.element;
-        this.styleDeclaration = window.getComputedStyle(this.element);
-        this.subscribers = [];
+    /*
+     * Initializes variables
+     *
+     * @method _init
+     * @private
+     */
+    BreakpointService.prototype._init = function() {
+        this.styleDeclaration = window.getComputedStyle(this._options.element);
+        this.pubsub = new PubSub();
 
-        this.element.addEventListener('resize', this.handleResize);
+        window.addEventListener('resize', this.handleResize);
         this.handleResize();
 
         return this;
     };
 
-    BreakpointService.prototype.bindHandlers = function() {
+    /*
+     * Bind handlers to instance
+     *
+     * @method _bindHandlers
+     * @private
+     */
+    BreakpointService.prototype._bindHandlers = function() {
         var boundResize = this._onResize.bind(this);
         var eventDelay = this._options.eventDelay;
-        this.handleResize = debounce(boundResize, eventDelay);
+        this.handleResize = eventDelay ? debounce(boundResize, eventDelay) : boundResize;
         return this;
     };
 
+    /*
+     * Handle resize event
+     *
+     * @method _onResize
+     * @param {ResizeEvent} event Window resize event
+     * @private
+     */
     BreakpointService.prototype._onResize = function(event) {
         var cssBreakpoint = this.styleDeclaration.getPropertyValue('content');
         var oldBreakpoint;
@@ -47,39 +72,57 @@ define(function(require) {
         oldBreakpoint = this.currentBreakpoint;
         this.currentBreakpoint = cssBreakpoint;
 
-        this.subscribers.forEach(function(callback) {
-            callback(cssBreakpoint, oldBreakpoint);
-        });
+        this.pubsub.publish('breakpointchange', cssBreakpoint, oldBreakpoint);
     };
 
+    /*
+     * Get the current breakpoint
+     *
+     * @method getBreakpoint
+     * @public
+     * @returns {String}
+     */
     BreakpointService.prototype.getBreakpoint = function() {
         return this.currentBreakpoint;
     };
 
+    /*
+     * Register callback function
+     *
+     * @method subscribe
+     * @param {Function} callback Breakpoint change callback
+     * @public
+     */
     BreakpointService.prototype.subscribe = function(callback) {
-        this.subscribers.push(callback);
+        this.pubsub.subscribe('breakpointchange', callback);
     };
 
+    /*
+     * Deregister callback function
+     *
+     * @method unsubscribe
+     * @param {Function} callback Breakpoint change callback
+     * @public
+     */
     BreakpointService.prototype.unsubscribe = function(callback) {
-        var subscriberIdx = this.subscribers.indexOf(callback);
-        if (subscriberIdx > -1) {
-            this.subscribers.splice(subscriberIdx, 1);
-        }
+        this.pubsub.unsubscribe('breakpointchange', callback);
     };
 
+    /*
+     * Destroy instance
+     *
+     * @method destroy
+     * @public
+     */
     BreakpointService.prototype.destroy = function() {
         // remove event listeners
-        this.element.removeEventListener('resize', this.handleResize);
+        window.removeEventListener('resize', this.handleResize);
 
-        // get rid of any reference to DOM
-        this.subscribers = null;
-        this.element = null;
+        // get rid of any references
+        this.pubsub = null;
         this._options = null;
+        this.styleDeclaration = null;
     };
-
-    //TODO: document script
-    //TODO: test
-    //TODO: use pubsub for eventing
 
     return BreakpointService;
 });

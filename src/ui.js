@@ -14,6 +14,11 @@ define(function(require) {
         //   delegate.remove(); // deregister function is returned by method
         delegateEvent: require('./ui/delegateEvent'),
 
+        // parses html text into elements
+        //   var parsedElements = domify('<div><b></b></div><span></span>');
+        //   // returns [DIVElement, SPANElement]
+        domify: require('./ui/domify'),
+
         // alias for querySelectorAll, casts NodeList into Array
         //   var links = find('a');
         //   links.forEach(doSomething);
