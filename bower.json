@@ -8,7 +8,7 @@
   "description": "Modular, reusable utilities",
   "main": "src/index.js",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "ignore": [
     "**/.*",
     "node_modules",
