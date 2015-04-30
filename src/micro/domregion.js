@@ -1,13 +1,40 @@
-define(function(require) {
+(function(root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define([
+            '../errors/FocusTrap',
+            './pubsub',
+            '../ui/find',
+            '../ui/matches'
+        ], factory);
+    } else if (typeof module !== 'undefined' && module.exports) {
+        module.exports = factory(
+            require('../errors/FocusTrap'),
+            require('./pubsub'),
+            require('../ui/find'),
+            require('../ui/matches')
+        );
+    } else {
+        /*jshint sub:true */
+        root.Stark = root.Stark || {};
+        root.Stark.DOMRegion = factory(
+            root.Stark.FocusTrapError,
+            root.Stark.PubSub,
+            root.Stark.find,
+            root.Stark.matches
+        );
+    }
+}(this, function(
+    FocusTrapError,
+    PubSub,
+    find,
+    matches
+) {
     'use strict';
 
     // Browser Support IE9+ - dependancy on addEventListener
 
-    var FocusTrapError = require('../errors/FocusTrap');
-    var find = require('../ui/find');
-    var matches = require('../ui/matches');
-
     var TAB_KEY = 9;
+    var ESC_KEY = 27;
 
     // globally trapped region
     var currentTrapRegion = null;
@@ -24,8 +51,13 @@ define(function(require) {
         '[tabindex]'
     ].join(',');
 
-    var DOMRegion = function(rootElement) {
+    var DOMRegion = function(rootElement, options) {
+        if (!(rootElement instanceof Element)) {
+            throw new TypeError('DOMRegion must be passed an Element to bind to.');
+        }
+        PubSub.extendObject(this);
         this.rootElement = rootElement;
+        this._config = options || {};
         this._init();
     };
 
@@ -42,7 +74,24 @@ define(function(require) {
     DOMRegion.prototype._init = function() {
         this._focusableElements = null;
         this._trapped = false;
-        this._handleElementBlur = this._onElementBlur.bind(this);
+        this._handleKeydown = this._onKeydown.bind(this);
+    };
+
+    DOMRegion.prototype._findElements = function() {
+        // reset list of focusable elements
+        var focusableElements = find(SELECTABLE, this.rootElement).filter(function(el) {
+            // filter out items with overwritten tabIndex values or disabled inputs
+            return el.tabIndex !== -1 && el.getAttribute('disabled') === null;
+        });
+
+        // add wrapper if focusable
+        if (
+            matches(this.rootElement, SELECTABLE) &&
+            this.rootElement.tabIndex !== -1 &&
+            this.rootElement.getAttribute('disabled') === null
+        ) {
+            focusableElements.unshift(this.rootElement);
+        }
     };
 
     DOMRegion.prototype.trapFocus = function() {
@@ -54,22 +103,10 @@ define(function(require) {
         }
 
         // reset list of focusable elements
-        this._focusableElements = find(SELECTABLE, this.rootElement).filter(function(el) {
-            // filter out items with overwritten tabIndex values or disabled inputs
-            return el.tabIndex !== -1 && el.getAttribute('disabled') === null;
-        });
-
-        // add wrapper if focusable
-        if (
-            matches(this.rootElement, SELECTABLE) &&
-            this.rootElement.tabIndex !== -1 &&
-            this.rootElement.getAttribute('disabled') === null
-        ) {
-            this._focusableElements.unshift(this.rootElement);
-        }
+        this._focusableElements = this._findElements();
 
         // add listener and set flag
-        document.addEventListener('keydown', this._handleElementBlur, true);
+        document.addEventListener('keydown', this._handleKeydown, true);
         this._trapped = true;
         currentTrapRegion = this;
     };
@@ -82,14 +119,14 @@ define(function(require) {
         // remove DOM references
         this._focusableElements = null;
 
-        document.removeEventListener('keydown', this._handleElementBlur, true);
+        document.removeEventListener('keydown', this._handleKeydown, true);
         this._trapped = false;
         currentTrapRegion = null;
     };
 
     DOMRegion.prototype.focus = function() {
         // focus element if focusable or first focusable element
-        var firstElement = this.rootElement.querySelector(SELECTABLE);
+        var firstElement = this._trapped ? this._focusableElements[0] : this.rootElement.querySelector(SELECTABLE);
         if (firstElement) {
             firstElement.focus();
         }
@@ -99,10 +136,23 @@ define(function(require) {
         return this.rootElement.contains(element);
     };
 
+    DOMRegion.prototype._onKeydown = function(event) {
+        // check for esc and notify subscribers
+        if (event.keyCode === ESC_KEY) {
+            this.publish('esc', event);
+        }
+
+        // listen for tab key
+        if (event.keyCode === TAB_KEY) {
+            this._onElementBlur(event);
+        }
+
+    };
+
     DOMRegion.prototype._onElementBlur = function(event) {
-        // only listen for tab key
-        if (event.keyCode !== TAB_KEY) {
-            return;
+        // refresh element list if dynamic option is set
+        if (this._config.dynamic) {
+            this._focusableElements = this._findElements();
         }
 
         // don't let anything focus if there are no focusable elements
@@ -134,4 +184,4 @@ define(function(require) {
     };
 
     return DOMRegion;
-});
+}));

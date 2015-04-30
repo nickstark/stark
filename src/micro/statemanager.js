@@ -1,4 +1,17 @@
-define(function(require) {
+(function(root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define([], factory);
+    } else if (typeof module !== 'undefined' && module.exports) {
+        module.exports = factory();
+    } else {
+        /*jshint sub:true */
+        root.Stark = root.Stark || {};
+        root.Stark.StateManager = factory();
+    }
+}(this, function(
+    extend,
+    bindAll
+) {
     'use strict';
 
     /**
@@ -170,4 +183,4 @@ define(function(require) {
     }
 
     return StateManager;
-});
+}));

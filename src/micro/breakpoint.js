@@ -1,17 +1,46 @@
-define(function(require) {
+(function(root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define([
+            '../function/debounce',
+            '../object/extend',
+            './pubsub'
+        ], factory);
+    } else if (typeof module !== 'undefined' && module.exports) {
+        module.exports = factory(
+            require('../function/debounce'),
+            require('../object/extend'),
+            require('./pubsub')
+        );
+    } else {
+        /*jshint sub:true */
+        root.Stark = root.Stark || {};
+        root.Stark.Breakpoint = factory(
+            root.Stark.debounce,
+            root.Stark.extend,
+            root.Stark.PubSub
+        );
+    }
+}(this, function(
+    debounce,
+    extend,
+    PubSub
+) {
     'use strict';
 
     // Browser Support: IE9+ (Dependancy on getComputedStyle)
 
-    var debounce = require('../function/debounce');
-    var extend = require('../object/extend');
-    var PubSub = require('./pubsub');
+    // detect if query will wrap in quotes
+    var quoteRegex = /\"/g;
 
     // option defaults
     var DEFAULTS = {
         eventDelay: 50, // time resize event is debounced
-        element: document.body // element to read content from
+        element: document.body, // element to read content from
+        pseudo: ':after' // pseudo-element to read content from
     };
+
+    // namespace for pubsub
+    var BREAKPOINT_NS = 'breakpointchange';
 
     /*
      * basic constructor, initializes breakpoint listener
@@ -33,11 +62,13 @@ define(function(require) {
      * @private
      */
     BreakpointService.prototype._init = function() {
-        this.styleDeclaration = window.getComputedStyle(this._options.element);
-        this.pubsub = new PubSub();
+        var opts = this._options;
+        this._styleDeclaration = window.getComputedStyle(opts.element, opts.pseudo);
+        this._pubsub = new PubSub();
 
-        window.addEventListener('resize', this.handleResize);
-        this.handleResize();
+        window.addEventListener('resize', this._handleResize);
+        window.addEventListener('orientationchange', this._handleResize);
+        this._handleResize();
 
         return this;
     };
@@ -51,7 +82,7 @@ define(function(require) {
     BreakpointService.prototype._bindHandlers = function() {
         var boundResize = this._onResize.bind(this);
         var eventDelay = this._options.eventDelay;
-        this.handleResize = eventDelay ? debounce(boundResize, eventDelay) : boundResize;
+        this._handleResize = eventDelay ? debounce(boundResize, eventDelay) : boundResize;
         return this;
     };
 
@@ -63,16 +94,17 @@ define(function(require) {
      * @private
      */
     BreakpointService.prototype._onResize = function(event) {
-        var cssBreakpoint = this.styleDeclaration.getPropertyValue('content');
+        var cssBreakpoint = this._styleDeclaration.getPropertyValue('content');
         var oldBreakpoint;
-        if (cssBreakpoint === this.currentBreakpoint) {
+
+        if (cssBreakpoint === this._currentBreakpoint) {
             return;
         }
 
-        oldBreakpoint = this.currentBreakpoint;
-        this.currentBreakpoint = cssBreakpoint;
+        oldBreakpoint = this._currentBreakpoint;
+        this._currentBreakpoint = cssBreakpoint;
 
-        this.pubsub.publish('breakpointchange', cssBreakpoint, oldBreakpoint);
+        this._pubsub.publish(BREAKPOINT_NS, cssBreakpoint, oldBreakpoint);
     };
 
     /*
@@ -83,7 +115,26 @@ define(function(require) {
      * @returns {String}
      */
     BreakpointService.prototype.getBreakpoint = function() {
-        return this.currentBreakpoint;
+        var bp = this._currentBreakpoint;
+        if (bp === 'none') {
+            bp = '';
+        }
+        return bp.replace(quoteRegex, '') || null;
+    };
+
+    /*
+     * Tests if current breakpoint is in list of arguments
+     *
+     * @method matches
+     * @public
+     * @returns {String}
+     */
+    BreakpointService.prototype.matches = function() {
+        var currentBreakpoint = this.getBreakpoint();
+        var breakpointNames = Array.prototype.slice.call(arguments, 0);
+        return breakpointNames.some(function(name) {
+            return name === currentBreakpoint;
+        }, this);
     };
 
     /*
@@ -94,7 +145,7 @@ define(function(require) {
      * @public
      */
     BreakpointService.prototype.subscribe = function(callback) {
-        this.pubsub.subscribe('breakpointchange', callback);
+        this._pubsub.subscribe(BREAKPOINT_NS, callback);
     };
 
     /*
@@ -105,7 +156,7 @@ define(function(require) {
      * @public
      */
     BreakpointService.prototype.unsubscribe = function(callback) {
-        this.pubsub.unsubscribe('breakpointchange', callback);
+        this._pubsub.unsubscribe(BREAKPOINT_NS, callback);
     };
 
     /*
@@ -116,13 +167,14 @@ define(function(require) {
      */
     BreakpointService.prototype.destroy = function() {
         // remove event listeners
-        window.removeEventListener('resize', this.handleResize);
+        window.removeEventListener('resize', this._handleResize);
+        window.removeEventListener('orientationchange', this._handleResize);
 
         // get rid of any references
-        this.pubsub = null;
+        this._pubsub = null;
         this._options = null;
-        this.styleDeclaration = null;
+        this._styleDeclaration = null;
     };
 
     return BreakpointService;
-});
+}));

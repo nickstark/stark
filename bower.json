@@ -6,7 +6,6 @@
     "Nick Stark <dev.nickstark@gmail.com>"
   ],
   "description": "Modular, reusable utilities",
-  "main": "src/index.js",
   "license": "MIT",
   "private": false,
   "ignore": [

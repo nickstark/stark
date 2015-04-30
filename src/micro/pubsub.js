@@ -1,4 +1,26 @@
-define(function(require) {
+(function(root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define([
+            '../object/extend',
+            '../object/bindAll'
+        ], factory);
+    } else if (typeof module !== 'undefined' && module.exports) {
+        module.exports = factory(
+            require('../object/extend'),
+            require('../object/bindAll')
+        );
+    } else {
+        /*jshint sub:true */
+        root.Stark = root.Stark || {};
+        root.Stark.PubSub = factory(
+            root.Stark.extend,
+            root.Stark.bindAll
+        );
+    }
+}(this, function(
+    extend,
+    bindAll
+) {
     'use strict';
 
     // Strategies
@@ -13,9 +35,6 @@ define(function(require) {
     //          var MyClass = function() { PubSub.extendObject(this, events); };
     //          var instance = new MyClass();
     //          instance.publish('my_event');
-
-    var extend = require('../object/extend');
-    var bindAll = require('../object/bindAll');
 
     /*
      * basic constructor, initializes topics repository
@@ -139,4 +158,4 @@ define(function(require) {
     //       globalEvents.publish('someglobalevent');
 
     return PubSub;
-});
+}));
