@@ -30,7 +30,7 @@
     // Browser Support: IE9+ (Dependancy on getComputedStyle)
 
     // detect if query will wrap in quotes
-    var quoteRegex = /(\"|\')/g;
+    var quoteRegex = /["']/g;
 
     // option defaults
     var DEFAULTS = {
