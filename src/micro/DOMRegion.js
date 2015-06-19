@@ -92,6 +92,8 @@
         ) {
             focusableElements.unshift(this.rootElement);
         }
+
+        return focusableElements;
     };
 
     DOMRegion.prototype.trapFocus = function() {
