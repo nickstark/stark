@@ -1,20 +1,16 @@
-define(function(require) {
+var NotImplementedError = function(message) {
+    Error.apply(this);
+    Error.captureStackTrace(this, arguments.callee);
 
-    var NotImplementedError = function(message) {
-        Error.apply(this);
-        Error.captureStackTrace(this, arguments.callee);
+    if (message) {
+        this.message = message;
+    }
+};
 
-        if (message) {
-            this.message = message;
-        }
-    };
+NotImplementedError.prototype = Object.create(Error.prototype);
+NotImplementedError.prototype.constructor = NotImplementedError;
 
-    NotImplementedError.prototype = Object.create(Error.prototype);
-    NotImplementedError.prototype.constructor = NotImplementedError;
+NotImplementedError.prototype.name = 'NotImplementedError';
+NotImplementedError.prototype.message = 'Method not implemented';
 
-    NotImplementedError.prototype.name = 'NotImplementedError';
-    NotImplementedError.prototype.message = 'Method not implemented';
-
-    return NotImplementedError;
-
-});
+export default NotImplementedError;

@@ -1,12 +1,7 @@
-define(function() {
-    'use strict';
+var currentId = 0;
 
-    var currentId = 0;
-
-    return function(prefix) {
-        prefix = typeof prefix === 'undefined' ? '' : prefix + '';
-        currentId += 1;
-        return prefix + currentId;
-    };
-
-});
+export default function(prefix) {
+    prefix = typeof prefix === 'undefined' ? '' : prefix + '';
+    currentId += 1;
+    return prefix + currentId;
+};

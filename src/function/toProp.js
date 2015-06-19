@@ -1,10 +1,5 @@
-define(function(require) {
-    'use strict';
-
-    return function(prop) {
-        return function(input) {
-            return input[prop];
-        };
+export default function(prop) {
+    return function(input) {
+        return input[prop];
     };
-
-});
+};

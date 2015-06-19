@@ -1,4 +1,4 @@
-require(['src/index'], function(utils) {
+require(['dist/index'], function(utils) {
     window.utils = utils;
 
     // put all functions on window

@@ -1,21 +1,21 @@
-define(function(require) {
+import createLookup from './collection/createLookup';
+import categorize from './collection/categorize';
+import findByProperty from './collection/findByProperty';
 
-    /*
-     * Utility functions for working with collections or arrays of data
-     */
+/*
+ * Utility functions for working with collections or arrays of data
+ */
 
-    return {
-        // useful for multiple lookups by a unique identifier
-        // var userLookup = createLookup('id', users)
-        createLookup: require('./collection/createLookup'),
+export default {
+    // useful for multiple lookups by a unique identifier
+    // var userLookup = createLookup('id', users)
+    createLookup,
 
-        // useful for filtering into categories
-        // var userLookupByCity = categorize('city', users);
-        categorize: require('./collection/categorize'),
+    // useful for filtering into categories
+    // var userLookupByCity = categorize('city', users);
+    categorize,
 
-        // useful for finding an item by id or other unique property
-        // var selectedUser = findByProperty('id', users, selectedId);
-        findByProperty: require('./collection/findByProperty')
-    };
-
-});
+    // useful for finding an item by id or other unique property
+    // var selectedUser = findByProperty('id', users, selectedId);
+    findByProperty
+};

@@ -4,10 +4,12 @@
   "description": "Modular, reusable utilities",
   "private": true,
   "scripts": {
-      "docs": "rm -r docs; doxx -s src"
+    "build": "rm -r dist; babel src -m common --out-dir dist/common; babel src -m amd --out-dir dist/amd;",
+    "docs": "rm -r docs; doxx -s src"
   },
   "dependencies": {},
   "devDependencies": {
+    "babel": "^5.5.8",
     "doxx": "^1.2.5"
   }
 }

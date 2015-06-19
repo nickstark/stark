@@ -1,8 +1,3 @@
-define(function () {
-    'use strict';
-
-    return function(tagName) {
-        return document.createElementNS('http://www.w3.org/2000/svg', tagName);
-    };
-
-});
+export default function(tagName) {
+    return document.createElementNS('http://www.w3.org/2000/svg', tagName);
+};

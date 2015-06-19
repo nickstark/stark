@@ -1,189 +1,160 @@
-(function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define([
-            '../errors/FocusTrapError',
-            './PubSub',
-            '../ui/find',
-            '../ui/matches'
-        ], factory);
-    } else if (typeof module !== 'undefined' && module.exports) {
-        module.exports = factory(
-            require('../errors/FocusTrapError'),
-            require('./PubSub'),
-            require('../ui/find'),
-            require('../ui/matches')
-        );
-    } else {
-        /*jshint sub:true */
-        root.Stark = root.Stark || {};
-        root.Stark.DOMRegion = factory(
-            root.Stark.FocusTrapError,
-            root.Stark.PubSub,
-            root.Stark.find,
-            root.Stark.matches
-        );
+import FocusTrapError from '../errors/FocusTrapError';
+import PubSub from './PubSub';
+import find from '../ui/find';
+import matches from '../ui/matches';
+
+// Browser Support IE9+ - dependancy on addEventListener
+
+var TAB_KEY = 9;
+var ESC_KEY = 27;
+
+// globally trapped region
+var currentTrapRegion = null;
+
+// list of possible selectable elements
+var SELECTABLE = [
+    'a[href]',
+    'area[href]',
+    'button',
+    'iframe',
+    'input',
+    'select',
+    'textarea',
+    '[tabindex]'
+].join(',');
+
+var DOMRegion = function(rootElement, options) {
+    if (!(rootElement instanceof Element)) {
+        throw new TypeError('DOMRegion must be passed an Element to bind to.');
     }
-}(this, function(
-    FocusTrapError,
-    PubSub,
-    find,
-    matches
-) {
-    'use strict';
+    PubSub.extendObject(this);
+    this.rootElement = rootElement;
+    this._config = options || {};
+    this._init();
+};
 
-    // Browser Support IE9+ - dependancy on addEventListener
+// static method to TRY focussing element
+DOMRegion.focusElement = function(element) {
+    if (currentTrapRegion && !currentTrapRegion.contains(element)) {
+        return false;
+    }
 
-    var TAB_KEY = 9;
-    var ESC_KEY = 27;
+    element.focus();
+    return true;
+};
 
-    // globally trapped region
-    var currentTrapRegion = null;
+DOMRegion.prototype._init = function() {
+    this._focusableElements = null;
+    this._trapped = false;
+    this._handleKeydown = this._onKeydown.bind(this);
+};
 
-    // list of possible selectable elements
-    var SELECTABLE = [
-        'a[href]',
-        'area[href]',
-        'button',
-        'iframe',
-        'input',
-        'select',
-        'textarea',
-        '[tabindex]'
-    ].join(',');
+DOMRegion.prototype._findElements = function() {
+    // reset list of focusable elements
+    var focusableElements = find(SELECTABLE, this.rootElement).filter(function(el) {
+        // filter out items with overwritten tabIndex values or disabled inputs
+        return el.tabIndex !== -1 && el.getAttribute('disabled') === null;
+    });
 
-    var DOMRegion = function(rootElement, options) {
-        if (!(rootElement instanceof Element)) {
-            throw new TypeError('DOMRegion must be passed an Element to bind to.');
-        }
-        PubSub.extendObject(this);
-        this.rootElement = rootElement;
-        this._config = options || {};
-        this._init();
-    };
+    // add wrapper if focusable
+    if (
+        matches(this.rootElement, SELECTABLE) &&
+        this.rootElement.tabIndex !== -1 &&
+        this.rootElement.getAttribute('disabled') === null
+    ) {
+        focusableElements.unshift(this.rootElement);
+    }
 
-    // static method to TRY focussing element
-    DOMRegion.focusElement = function(element) {
-        if (currentTrapRegion && !currentTrapRegion.contains(element)) {
-            return false;
-        }
+    return focusableElements;
+};
 
-        element.focus();
-        return true;
-    };
+DOMRegion.prototype.trapFocus = function() {
+    if (currentTrapRegion && currentTrapRegion !== this) {
+        throw new FocusTrapError(currentTrapRegion, this);
+    }
+    if (this._trapped) {
+        return;
+    }
 
-    DOMRegion.prototype._init = function() {
-        this._focusableElements = null;
-        this._trapped = false;
-        this._handleKeydown = this._onKeydown.bind(this);
-    };
+    // reset list of focusable elements
+    this._focusableElements = this._findElements();
 
-    DOMRegion.prototype._findElements = function() {
-        // reset list of focusable elements
-        var focusableElements = find(SELECTABLE, this.rootElement).filter(function(el) {
-            // filter out items with overwritten tabIndex values or disabled inputs
-            return el.tabIndex !== -1 && el.getAttribute('disabled') === null;
-        });
+    // add listener and set flag
+    document.addEventListener('keydown', this._handleKeydown, true);
+    this._trapped = true;
+    currentTrapRegion = this;
+};
 
-        // add wrapper if focusable
-        if (
-            matches(this.rootElement, SELECTABLE) &&
-            this.rootElement.tabIndex !== -1 &&
-            this.rootElement.getAttribute('disabled') === null
-        ) {
-            focusableElements.unshift(this.rootElement);
-        }
+DOMRegion.prototype.releaseFocus = function() {
+    if (!this._trapped) {
+        return;
+    }
 
-        return focusableElements;
-    };
+    // remove DOM references
+    this._focusableElements = null;
 
-    DOMRegion.prototype.trapFocus = function() {
-        if (currentTrapRegion && currentTrapRegion !== this) {
-            throw new FocusTrapError(currentTrapRegion, this);
-        }
-        if (this._trapped) {
-            return;
-        }
+    document.removeEventListener('keydown', this._handleKeydown, true);
+    this._trapped = false;
+    currentTrapRegion = null;
+};
 
-        // reset list of focusable elements
+DOMRegion.prototype.focus = function() {
+    // focus element if focusable or first focusable element
+    var firstElement = this._trapped ? this._focusableElements[0] : this.rootElement.querySelector(SELECTABLE);
+    if (firstElement) {
+        firstElement.focus();
+    }
+};
+
+DOMRegion.prototype.contains = function(element) {
+    return this.rootElement.contains(element);
+};
+
+DOMRegion.prototype._onKeydown = function(event) {
+    // check for esc and notify subscribers
+    if (event.keyCode === ESC_KEY) {
+        this.publish('esc', event);
+    }
+
+    // listen for tab key
+    if (event.keyCode === TAB_KEY) {
+        this._onElementBlur(event);
+    }
+
+};
+
+DOMRegion.prototype._onElementBlur = function(event) {
+    // refresh element list if dynamic option is set
+    if (this._config.dynamic) {
         this._focusableElements = this._findElements();
+    }
 
-        // add listener and set flag
-        document.addEventListener('keydown', this._handleKeydown, true);
-        this._trapped = true;
-        currentTrapRegion = this;
-    };
+    // don't let anything focus if there are no focusable elements
+    if (!this._focusableElements.length) {
+        event.preventDefault();
+        return;
+    }
 
-    DOMRegion.prototype.releaseFocus = function() {
-        if (!this._trapped) {
-            return;
-        }
+    // store references
+    var firstElement = this._focusableElements[0];
+    var lastElement = this._focusableElements[this._focusableElements.length - 1];
 
-        // remove DOM references
-        this._focusableElements = null;
+    // check if first tab
+    if (document.activeElement === document.body && this.rootElement !== document.body) {
+        event.preventDefault();
+        firstElement.focus();
+        return;
+    }
 
-        document.removeEventListener('keydown', this._handleKeydown, true);
-        this._trapped = false;
-        currentTrapRegion = null;
-    };
+    // handle exiting cases
+    if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault(); // stop focus
+        firstElement.focus();
+    } else if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault(); // stop focus
+        lastElement.focus();
+    }
 
-    DOMRegion.prototype.focus = function() {
-        // focus element if focusable or first focusable element
-        var firstElement = this._trapped ? this._focusableElements[0] : this.rootElement.querySelector(SELECTABLE);
-        if (firstElement) {
-            firstElement.focus();
-        }
-    };
+};
 
-    DOMRegion.prototype.contains = function(element) {
-        return this.rootElement.contains(element);
-    };
-
-    DOMRegion.prototype._onKeydown = function(event) {
-        // check for esc and notify subscribers
-        if (event.keyCode === ESC_KEY) {
-            this.publish('esc', event);
-        }
-
-        // listen for tab key
-        if (event.keyCode === TAB_KEY) {
-            this._onElementBlur(event);
-        }
-
-    };
-
-    DOMRegion.prototype._onElementBlur = function(event) {
-        // refresh element list if dynamic option is set
-        if (this._config.dynamic) {
-            this._focusableElements = this._findElements();
-        }
-
-        // don't let anything focus if there are no focusable elements
-        if (!this._focusableElements.length) {
-            event.preventDefault();
-            return;
-        }
-
-        // store references
-        var firstElement = this._focusableElements[0];
-        var lastElement = this._focusableElements[this._focusableElements.length - 1];
-
-        // check if first tab
-        if (document.activeElement === document.body && this.rootElement !== document.body) {
-            event.preventDefault();
-            firstElement.focus();
-            return;
-        }
-
-        // handle exiting cases
-        if (!event.shiftKey && document.activeElement === lastElement) {
-            event.preventDefault(); // stop focus
-            firstElement.focus();
-        } else if (event.shiftKey && document.activeElement === firstElement) {
-            event.preventDefault(); // stop focus
-            lastElement.focus();
-        }
-
-    };
-
-    return DOMRegion;
-}));
+export default DOMRegion;

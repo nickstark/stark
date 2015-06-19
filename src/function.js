@@ -1,49 +1,55 @@
-define(function(require) {
+import debounce from './function/debounce';
+import identity from './function/identity';
+import negate from './function/negate';
+import noop from './function/noop';
+import toProp from './function/toProp';
+import toMax from './function/toMax';
+import toMin from './function/toMin';
+import toSum from './function/toSum';
+import toUnique from './function/toUnique';
 
-    /*
-    * Utility functions for generating helper functions
-    */
+/*
+* Utility functions for generating helper functions
+*/
 
-    return {
-        // debounce function calls to reduce impact of event spamming
-        debounce: require('./function/debounce'),
+export default {
+    // debounce function calls to reduce impact of event spamming
+    debounce,
 
-        // return first argument, useful for filtering out falsy values
-        // identity(myObject) === myObject
-        identity: require('./function/identity'),
+    // return first argument, useful for filtering out falsy values
+    // identity(myObject) === myObject
+    identity,
 
-        // converts a functions to one that returns its opposite
-        // isAuthenticated(userId); // false
-        // var isUnauthenticated = negate(isAuthenticated);
-        // isUnauthenticated(userId); // true
-        negate: require('./function/negate'),
+    // converts a functions to one that returns its opposite
+    // isAuthenticated(userId); // false
+    // var isUnauthenticated = negate(isAuthenticated);
+    // isUnauthenticated(userId); // true
+    negate,
 
-        // do nothing, useful for function placeholders or functional programming
-        // (callback || noop)(callbackArgs);
-        noop: require('./function/noop'),
+    // do nothing, useful for function placeholders or functional programming
+    // (callback || noop)(callbackArgs);
+    noop,
 
-        // useful for passing into mapping functions
-        // var userIds = users.map(toProp('id'));
-        toProp: require('./function/toProp'),
+    // useful for passing into mapping functions
+    // var userIds = users.map(toProp('id'));
+    toProp,
 
-        // useful for finding max in array
-        // var total = [0, 1, 2, 3].reduce(toMax());
-        // returns 3
-        toMax: require('./function/toMax'),
+    // useful for finding max in array
+    // var total = [0, 1, 2, 3].reduce(toMax());
+    // returns 3
+    toMax,
 
-        // useful for finding max in array
-        // var total = [0, 1, 2, 3].reduce(toMin());
-        // returns 0
-        toMin: require('./function/toMin'),
+    // useful for finding max in array
+    // var total = [0, 1, 2, 3].reduce(toMin());
+    // returns 0
+    toMin,
 
-        // useful for adding up properties of an array
-        // var total = [0, 1, 2, 3].reduce(toSum());
-        // returns 6
-        toSum: require('./function/toSum'),
+    // useful for adding up properties of an array
+    // var total = [0, 1, 2, 3].reduce(toSum());
+    // returns 6
+    toSum,
 
-        // useful for filtering out duplicates
-        // var activeUsers = recentLoginIds.filter(toUnique());
-        toUnique: require('./function/toUnique')
-    };
-
-});
+    // useful for filtering out duplicates
+    // var activeUsers = recentLoginIds.filter(toUnique());
+    toUnique
+};

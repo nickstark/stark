@@ -1,12 +1,10 @@
-define(function(require) {
+import NotImplemented from './errors/NotImplemented';
 
-    /*
-     * Error Classes
-     */
+/*
+ * Error Classes
+ */
 
-    return {
-        // throws an error for not implemented functions
-        NotImplemented: require('./errors/NotImplemented')
-    };
-
-});
+export default {
+    // throws an error for not implemented functions
+    NotImplemented
+};

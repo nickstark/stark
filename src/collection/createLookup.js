@@ -1,14 +1,9 @@
-define(function(require) {
-    'use strict';
+export default function(prop, dataArr) {
+    var lookup = {};
 
-    return function(prop, dataArr) {
-        var lookup = {};
+    dataArr.forEach(function(item) {
+        lookup[item[prop]] = item;
+    });
 
-        dataArr.forEach(function(item) {
-            lookup[item[prop]] = item;
-        });
-
-        return lookup;
-    };
-
-});
+    return lookup;
+};
