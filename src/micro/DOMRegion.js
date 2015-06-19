@@ -1,14 +1,14 @@
 (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
         define([
-            '../errors/FocusTrap',
+            '../errors/FocusTrapError',
             './PubSub',
             '../ui/find',
             '../ui/matches'
         ], factory);
     } else if (typeof module !== 'undefined' && module.exports) {
         module.exports = factory(
-            require('../errors/FocusTrap'),
+            require('../errors/FocusTrapError'),
             require('./PubSub'),
             require('../ui/find'),
             require('../ui/matches')
