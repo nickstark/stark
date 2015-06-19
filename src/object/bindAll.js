@@ -1,4 +1,14 @@
-define(function(require) {
+(function(root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define([], factory);
+    } else if (typeof module !== 'undefined' && module.exports) {
+        module.exports = factory();
+    } else {
+        /*jshint sub:true */
+        root.Stark = root.Stark || {};
+        root.Stark.bindAll = factory();
+    }
+}(this, function() {
     'use strict';
 
     return function(source, props, target) {
@@ -18,5 +28,5 @@ define(function(require) {
             target[prop] = source[prop].bind(source);
         });
     };
-    
-});
+
+}));

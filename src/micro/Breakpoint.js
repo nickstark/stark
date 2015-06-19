@@ -3,13 +3,13 @@
         define([
             '../function/debounce',
             '../object/extend',
-            './pubsub'
+            './PubSub'
         ], factory);
     } else if (typeof module !== 'undefined' && module.exports) {
         module.exports = factory(
             require('../function/debounce'),
             require('../object/extend'),
-            require('./pubsub')
+            require('./PubSub')
         );
     } else {
         /*jshint sub:true */

@@ -2,14 +2,14 @@
     if (typeof define === 'function' && define.amd) {
         define([
             '../errors/FocusTrap',
-            './pubsub',
+            './PubSub',
             '../ui/find',
             '../ui/matches'
         ], factory);
     } else if (typeof module !== 'undefined' && module.exports) {
         module.exports = factory(
             require('../errors/FocusTrap'),
-            require('./pubsub'),
+            require('./PubSub'),
             require('../ui/find'),
             require('../ui/matches')
         );
