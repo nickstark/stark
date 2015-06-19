@@ -12,10 +12,10 @@ define(function(require) {
         ui: require('./ui'),
 
         // micro library classes
-        DOMRegion: require('./micro/domregion'),
-        PubSub: require('./micro/pubsub'),
-        Breakpoint: require('./micro/breakpoint'),
-        StateManager: require('./micro/statemanager')
+        DOMRegion: require('./micro/DOMRegion'),
+        PubSub: require('./micro/PubSub'),
+        Breakpoint: require('./micro/Breakpoint'),
+        StateManager: require('./micro/StateManager')
     };
 
 
