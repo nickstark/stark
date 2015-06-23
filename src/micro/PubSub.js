@@ -18,9 +18,13 @@ import bindAll from '../object/bindAll';
 //          instance.publish('my_event');
 
 /*
- * basic constructor, initializes topics repository
+ * A basic publish-subscribe pattern that emulates events namespaced by
+ * a string keyword.
  *
  * @constructor
+ * @class PubSub
+ * @requires extend
+ * @requires bindAll
  */
 var PubSub = function() {
     this._topics = {};
@@ -29,16 +33,24 @@ var PubSub = function() {
 /*
  * associate a callback with an event topic
  *
+ * @method subscribe
  * @param {String} topic String key to subscribe to (E.g. Event name)
  * @param {Function} callback Function to call when topic is published
+ * @return {object} object containing topic and deregister function
+ * @throws {TypeError} if topic is undefined or callback is not a function
+ * @example
+ *     // subscribe to 'mytopic' event
+ *     var token = pubsub.subscribe('mytopic', handleTheTopicEvent);
+ *     // remove subscription
+ *     token.remove();
  */
 PubSub.prototype.subscribe = function(topic, callback) {
     // make sure arguments are correct
     if (typeof topic === 'undefined') {
-        throw new Error('PubSub: trying to subscribe to undefined topic');
+        throw new TypeError('PubSub: trying to subscribe to undefined topic');
     }
     if (typeof callback !== 'function') {
-        throw new Error('PubSub: subscribe callback is not a function');
+        throw new TypeError('PubSub: subscribe callback is not a function');
     }
 
     // add array of topic subscribers if new topic
@@ -55,15 +67,26 @@ PubSub.prototype.subscribe = function(topic, callback) {
     };
 };
 
-// disassociate a callback from a topic
-// returns boolean indicating success
+PubSub.prototype.on = PubSub.prototype.subscribe;
+
+/*
+ * disassociate a callback from a topic
+ *
+ * @method unsubscribe
+ * @param {String} topic String key function is subscribed to (E.g. Event name)
+ * @param {Function} callback Function to unsubscribe
+ * @return {Boolean} success flag
+ * @throws {TypeError} if topic is undefined or callback is not a function
+ * @example
+ *     var wasSubscibedInFirstPlace = pubsub.unsubscribe('mytopic', myHandlerFunc);
+ */
 PubSub.prototype.unsubscribe = function(topic, callback) {
     // make sure arguments are correct
     if (typeof topic === 'undefined') {
-        throw new Error('PubSub: trying to unsubscribe from undefined topic');
+        throw new TypeError('PubSub: trying to unsubscribe from undefined topic');
     }
     if (typeof callback !== 'function') {
-        throw new Error('PubSub: unsubscribe callback is not a function');
+        throw new TypeError('PubSub: unsubscribe callback is not a function');
     }
 
     // check topic exists
@@ -81,11 +104,21 @@ PubSub.prototype.unsubscribe = function(topic, callback) {
     return false;
 };
 
-// publish an event to a topic
-// takes any number of arguments
+PubSub.prototype.off = PubSub.prototype.unsubscribe;
+
+/*
+ * publish an event to a topic. Additional parameters will be passed to the
+ * subscibed callback.
+ *
+ * @method publish
+ * @param {String} topic String key to publish to
+ * @throws {TypeError} if topic is undefined
+ * @example
+ *     pubsub.publish('mytopic', firstArg, secondArg, moreData);
+ */
 PubSub.prototype.publish = function(topic) {
     if (typeof topic === 'undefined') {
-        throw new Error('PubSub: trying to publish with undefined topic');
+        throw new TypeError('PubSub: trying to publish with undefined topic');
     }
     var args = Array.prototype.slice.call(arguments, 1);
 
@@ -96,17 +129,29 @@ PubSub.prototype.publish = function(topic) {
     }
 };
 
-// alias jquery nomenclature
-PubSub.prototype.on = PubSub.prototype.subscribe;
-PubSub.prototype.off = PubSub.prototype.unsubscribe;
 PubSub.prototype.trigger = PubSub.prototype.publish;
 
-// static method
-//
-// extend pubsub functionality onto external object
-// optionally, pass in an existing pubsub instance to bind to
-//
-// returns core pubsub instance, can be saved to pass into additional calls
+/*
+ * extend pubsub functionality onto external object
+ *
+ * @method extendObject
+ * @static
+ * @param {object} destObj Object to augment with PubSub functionality
+ * @param {PubSub} [inst] Instance of PubSub to use behind the scenes
+ * @param {Boolean} [includeJqueryFns=false] Include on, off, and trigger syntax
+ * @return {PubSub} The underlying PubSub index powering events
+ * @example
+ *     PubSub.extendObject(myClassInstance); // Basic functionality
+ *     myClassInstance.subscribe('classInstanceEvent', handler);
+ *
+ *     PubSub.extendObject(myClassInstance, globalPubSub); // shared events
+ *
+ *     var viewEvents = PubSub.extend(myView);
+ *     var secondViewEvents = PubSub.extend(secondView, viewEvents);
+ *     console.log(viewEvents === secondViewEvents); // true
+ *     viewEvents.publish('test', 'hello, both views');
+ *
+ */
 PubSub.extendObject = function(destObj, inst, includeJqueryFns) {
     // create new instance if pubsub isn't passed in
     if ( !(inst instanceof PubSub) ) {
@@ -130,12 +175,5 @@ PubSub.extendObject = function(destObj, inst, includeJqueryFns) {
 
     return inst;
 };
-
-//TODO: make able to subscribe to other PubSub instances?
-//       var globalEvents = new PubSub();
-//       var moduleEvents = new PubSub();
-//       moduleEvents.subscribe(globalEvents);
-//       moduleEvents.subscribe('someglobalevent', handler);
-//       globalEvents.publish('someglobalevent');
 
 export default PubSub;
