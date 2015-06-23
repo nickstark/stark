@@ -1,4 +1,4 @@
-import NotImplemented from './errors/NotImplemented';
+import NotImplementedError from './errors/NotImplementedError';
 
 /*
  * Error Classes
@@ -6,5 +6,5 @@ import NotImplemented from './errors/NotImplemented';
 
 export default {
     // throws an error for not implemented functions
-    NotImplemented
+    NotImplementedError
 };
